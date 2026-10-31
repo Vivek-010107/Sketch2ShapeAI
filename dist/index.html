@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Sketch2Shape AI</title>
+    <meta name="description" content="A quality-gated sketch-to-3D workflow." />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main>
+      <nav><span class="brand">Sketch<span>2</span>Shape</span><span class="badge">Prototype · quality-gated</span></nav>
+      <section class="hero">
+        <p class="eyebrow">SKETCH → CONFIDENT REFERENCE → 3D ASSET</p>
+        <h1>Turn a sketch into a model you can trust.</h1>
+        <p class="lede">A disciplined reconstruction workflow: identify the object, preserve its silhouette, then generate 3D only when the reference is good enough.</p>
+      </section>
+      <section class="workspace" aria-label="Sketch conversion workspace">
+        <div class="drop-card" id="dropZone">
+          <input id="fileInput" type="file" accept="image/*" hidden />
+          <div id="emptyState"><div class="sketch-mark">⌁</div><h2>Drop a single-object sketch here</h2><p>PNG, JPG, or WebP · best with a plain background</p><button id="browseButton">Choose sketch</button></div>
+          <img id="preview" alt="Uploaded sketch preview" hidden />
+        </div>
+        <aside class="status-card">
+          <p class="section-label">Pipeline status</p>
+          <ol id="stages">
+            <li class="active"><b>01</b><span>Upload a sketch</span><em>Ready</em></li>
+            <li><b>02</b><span>Recognize object</span><em>Waiting</em></li>
+            <li><b>03</b><span>Generate faithful reference</span><em>Waiting</em></li>
+            <li><b>04</b><span>Quality review</span><em>Waiting</em></li>
+            <li><b>05</b><span>Reconstruct 3D mesh</span><em>Waiting</em></li>
+          </ol>
+          <button class="primary" id="analyzeButton" disabled>Analyze sketch</button>
+          <p class="notice" id="notice">This hosted prototype demonstrates the product flow. GPU inference will run in the Colab backend.</p>
+        </aside>
+      </section>
+      <section class="principles">
+        <article><span>✦</span><h3>Don’t force a label</h3><p>Known-category recognition is paired with an unknown/low-confidence path.</p></article>
+        <article><span>◒</span><h3>Reject bad references</h3><p>Silhouette, identity, viewpoint, and isolation are checked before 3D reconstruction.</p></article>
+        <article><span>◇</span><h3>Export real assets</h3><p>Accepted references are reconstructed with TripoSR and exported as OBJ and GLB.</p></article>
+      </section>
+    </main>
+    <template id="resultTemplate"><div class="result"><p class="section-label">Recognition candidate</p><h2>Sketch received</h2><p>Next, the backend will rank labels and generate multiple reference candidates. Only a passing candidate proceeds to TripoSR.</p></div></template>
+    <script src="app.js"></script>
+  </body>
+</html>
