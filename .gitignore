@@ -1,0 +1,28 @@
+# Python and notebook noise
+__pycache__/
+*.py[cod]
+.ipynb_checkpoints/
+
+# Local environments and downloaded model weights
+.venv/
+venv/
+miniforge3/
+sf3d-env/
+models/
+checkpoints/
+hf-cache/
+stable-fast-3d/
+*.onnx
+*.safetensors
+
+# Runtime output and credentials
+outputs/
+sketch2shape_api/
+*.log
+.env
+.env.*
+
+# Local site-publishing artifacts
+site-artifacts/
+*.tar.gz
+.openai/

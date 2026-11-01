@@ -1,46 +1,29 @@
 <!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Sketch2Shape AI</title>
-    <meta name="description" content="A quality-gated sketch-to-3D workflow." />
-    <link rel="stylesheet" href="styles.css" />
-  </head>
-  <body>
-    <main>
-      <nav><span class="brand">Sketch<span>2</span>Shape</span><span class="badge">Prototype · quality-gated</span></nav>
-      <section class="hero">
-        <p class="eyebrow">SKETCH → CONFIDENT REFERENCE → 3D ASSET</p>
-        <h1>Turn a sketch into a model you can trust.</h1>
-        <p class="lede">A disciplined reconstruction workflow: identify the object, preserve its silhouette, then generate 3D only when the reference is good enough.</p>
-      </section>
-      <section class="workspace" aria-label="Sketch conversion workspace">
-        <div class="drop-card" id="dropZone">
-          <input id="fileInput" type="file" accept="image/*" hidden />
-          <div id="emptyState"><div class="sketch-mark">⌁</div><h2>Drop a single-object sketch here</h2><p>PNG, JPG, or WebP · best with a plain background</p><button id="browseButton">Choose sketch</button></div>
-          <img id="preview" alt="Uploaded sketch preview" hidden />
-        </div>
-        <aside class="status-card">
-          <p class="section-label">Pipeline status</p>
-          <ol id="stages">
-            <li class="active"><b>01</b><span>Upload a sketch</span><em>Ready</em></li>
-            <li><b>02</b><span>Recognize object</span><em>Waiting</em></li>
-            <li><b>03</b><span>Generate faithful reference</span><em>Waiting</em></li>
-            <li><b>04</b><span>Quality review</span><em>Waiting</em></li>
-            <li><b>05</b><span>Reconstruct 3D mesh</span><em>Waiting</em></li>
-          </ol>
-          <button class="primary" id="analyzeButton" disabled>Analyze sketch</button>
-          <p class="notice" id="notice">This hosted prototype demonstrates the product flow. GPU inference will run in the Colab backend.</p>
-        </aside>
-      </section>
-      <section class="principles">
-        <article><span>✦</span><h3>Don’t force a label</h3><p>Known-category recognition is paired with an unknown/low-confidence path.</p></article>
-        <article><span>◒</span><h3>Reject bad references</h3><p>Silhouette, identity, viewpoint, and isolation are checked before 3D reconstruction.</p></article>
-        <article><span>◇</span><h3>Export real assets</h3><p>Accepted references are reconstructed with TripoSR and exported as OBJ and GLB.</p></article>
-      </section>
-    </main>
-    <template id="resultTemplate"><div class="result"><p class="section-label">Recognition candidate</p><h2>Sketch received</h2><p>Next, the backend will rank labels and generate multiple reference candidates. Only a passing candidate proceeds to TripoSR.</p></div></template>
-    <script src="app.js"></script>
-  </body>
-</html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Sketch2Shape</title><meta name="description" content="Turn a sketch into a 3D object.">
+<link rel="stylesheet" href="styles.css"><link rel="stylesheet" href="gallery.css"><script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
+</head><body>
+<div class="app-shell" id="top">
+  <header class="app-header"><a class="brand" href="#top"><span class="brand-mark">S</span><span>Sketch2Shape</span></a><div class="header-copy">Where a simple line finds its third dimension.</div><details class="connection"><summary>Live mode</summary><div class="connection-popover"><label for="apiInput">Generation link</label><input id="apiInput" type="url" placeholder="https://…trycloudflare.com"><small>Connect a live model when you are ready.</small></div></details></header>
+  <main class="workspace">
+    <section class="source-panel"><div class="intro"><p>SKETCH A POSSIBILITY</p><h1>Give your idea<br>some depth.</h1><span>A loose line can become something you can hold, turn, and explore.</span></div>
+      <div class="drop-card" id="dropZone"><input id="fileInput" type="file" accept="image/*" hidden><div id="emptyState"><div class="mode-switch" role="tablist"><button class="mode active" id="uploadMode" type="button">Upload</button><button class="mode" id="drawMode" type="button">Draw</button></div><div id="uploadState"><span class="upload-icon">↥</span><h2>Start with a spark</h2><p>Drop in a sketch, or make one right here.</p><button id="browseButton" type="button">Choose your sketch</button></div><div id="drawState" hidden><canvas id="sketchCanvas" width="760" height="500" aria-label="Drawing canvas"></canvas><div class="canvas-actions"><button id="clearCanvas" type="button">Clear</button><button id="useCanvas" type="button">Use this sketch</button></div></div></div><img id="preview" alt="Your sketch" hidden></div>
+      <label class="note-field" for="promptInput"><span>Bring it to life</span><textarea id="promptInput" rows="2" maxlength="180" placeholder="Tell us what you have in mind — if you want to."></textarea></label>
+      <button class="generate-button" id="analyzeButton" disabled>Shape my idea <b>→</b></button>
+    </section>
+    <section class="viewer-panel"><div class="viewer-top"><div><p>YOUR CREATION</p><strong class="stage-id">Ready to be explored</strong></div><div class="viewer-actions"><button class="text-control" id="compareToggle" type="button" disabled>See sketch</button><button class="icon-control" id="resetView" type="button" title="Reset view" aria-label="Reset view">↺</button><button class="icon-control" id="fullscreenView" type="button" title="Full screen" aria-label="Full screen">⛶</button><a class="model-download" href="assets/revolver_from_raw_sketch.glb" download>Keep it</a></div></div><div class="viewer-frame" id="viewerFrame"><div class="halo"></div><img id="compareImage" class="compare-image" alt="Original sketch" hidden><model-viewer id="demoModel" src="assets/revolver_from_raw_sketch.glb" alt="Three-dimensional object preview" camera-controls camera-orbit="0deg 75deg 105%" shadow-intensity="0.7" exposure="1" environment-image="neutral" interaction-prompt="auto"></model-viewer><div class="viewer-tip">Drag to wander <span>·</span> Scroll to zoom</div></div><div class="viewer-bottom"><span>A new angle is waiting</span><span>GLB</span></div></section>
+  </main>
+  <section class="ledger" id="notes"><ol id="stages"><li class="active"><b>01</b><span>Imagine</span><em>Ready</em></li><li><b>02</b><span>Shape</span><em>—</em></li><li><b>03</b><span>Explore</span><em>—</em></li><li><b>04</b><span>Keep</span><em>—</em></li></ol><div class="model-details" id="modelDetails"><span>MODEL DETAILS</span><div><b id="vertexCount">—</b><small>vertices</small></div><div><b id="faceCount">—</b><small>faces</small></div><div><b id="generationTime">—</b><small>seconds</small></div></div></section>
+  <section class="example-gallery" aria-labelledby="examplesTitle">
+    <div class="example-copy"><p>REAL SF3D OUTPUTS</p><h2 id="examplesTitle">Explore finished studies.</h2><span>These examples were generated on a Tesla T4 using the same ControlNet → SF3D pipeline. They remain available without a live GPU.</span></div>
+    <div class="example-list" role="list">
+      <button class="example-card active" type="button" data-example="revolver" role="listitem"><span>01</span><strong>Revolver study</strong><small>9,267 vertices · GLB</small></button>
+      <button class="example-card" type="button" data-example="cup" role="listitem"><span>02</span><strong>Cup study</strong><small>17,451 vertices · GLB</small></button>
+      <button class="example-card" type="button" data-example="raw" role="listitem"><span>03</span><strong>Raw-sketch study</strong><small>13,926 vertices · GLB</small></button>
+    </div>
+  </section>
+  <p class="notice" id="notice">Your next object begins with one line.</p>
+</div>
+<template id="resultTemplate"><section class="result"><img class="relief-image" alt="Submitted sketch preview"><div><p>IT'S TAKING SHAPE</p><h2>Your idea has a new side.</h2><p class="prompt-recap"></p></div><div class="result-badges"><span>3D</span><span>GLB</span></div></section></template>
+<script src="app.js"></script></body></html>
